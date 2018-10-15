@@ -2,23 +2,45 @@ import React from "react";
 import "./todoListItem.css";
 
 class TodoListItem extends React.Component {
-  render() {
-    const { label, important = false } = this.props;
+  state = {
+    done: false,
+    important: false
+  };
 
-    const style = {
-      color: important ? "steelblue" : "black",
-      fontWeight: important ? "bold" : "normal"
-    };
+  onDoneTask = () => {
+    this.setState(state => {
+      return { done: !state.done };
+    });
+  };
+
+  onImportantTask = () => {
+    this.setState(({ important }) => {
+      return { important: !important };
+    });
+  };
+
+  render() {
+    const { label } = this.props;
+    const { done, important } = this.state;
+
+    let classNames = "todo-list-item";
+    if (done) {
+      classNames += " done";
+    }
+    if (important) {
+      classNames += " important";
+    }
 
     return (
-      <span className="todo-list-item">
-        <span className="todo-list-item-label" style={style}>
+      <span className={classNames}>
+        <span className="todo-list-item-label" onClick={this.onDoneTask}>
           {label}
         </span>
 
         <button
           type="button"
           className="btn btn-outline-success btn-sm float-right"
+          onClick={this.onImportantTask}
         >
           <i className="fa fa-exclamation" />
         </button>
