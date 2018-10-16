@@ -12,7 +12,7 @@ class App extends Component {
 
   state = {
     todoData: [
-      { id: 1, label: "Drink Coffee", important: false, done: false },
+      { id: 1, label: "Drink Coffee", important: false, done: true },
       { id: 2, label: "Learn React", important: true, done: false },
       { id: 3, label: "Make Awesome App", important: false, done: false }
     ]
@@ -42,6 +42,44 @@ class App extends Component {
     });
   };
 
+  onToggleImportant = id => {
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex(el => el.id === id);
+
+      const oldItem = todoData[idx];
+      const newItem = { ...oldItem, important: !oldItem.important };
+
+      const newArr = [
+        ...todoData.slice(0, idx),
+        newItem,
+        ...todoData.slice(idx + 1)
+      ];
+
+      return {
+        todoData: newArr
+      };
+    });
+  };
+
+  onToggleDone = id => {
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex(el => el.id === id);
+
+      const oldItem = todoData[idx];
+      const newItem = { ...oldItem, done: !oldItem.done };
+
+      const newArr = [
+        ...todoData.slice(0, idx),
+        newItem,
+        ...todoData.slice(idx + 1)
+      ];
+
+      return {
+        todoData: newArr
+      };
+    });
+  };
+
   render() {
     return (
       <div className="todo-app">
@@ -53,7 +91,12 @@ class App extends Component {
         <div>
           <AddTaskForm newTask={this.newTask} />
         </div>
-        <TodoList todos={this.state.todoData} onDeleted={this.deleteItem} />
+        <TodoList
+          todos={this.state.todoData}
+          onDeleted={this.deleteItem}
+          onToggleImportant={this.onToggleImportant}
+          onToggleDone={this.onToggleDone}
+        />
       </div>
     );
   }
