@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import AppHeader from "./app-header/AppHeader";
 import SearchPanel from "./search-panel/SearchPanel";
+import AddTaskForm from "./add-task-form/AddTaskForm";
 import TodoList from "./todo-list/TodoList";
 import ItemStatusFilter from "./item-status-filter/ItemStatusFilter";
 
 import "./app.css";
 
 class App extends Component {
+  maxId = 100;
+
   state = {
     todoData: [
       { id: 1, label: "Drink Coffee", important: false, done: false },
@@ -24,6 +27,21 @@ class App extends Component {
     });
   };
 
+  newTask = text => {
+    const newTaskItem = {
+      id: this.maxId++,
+      label: text,
+      important: false,
+      done: false
+    };
+    this.setState(({ todoData }) => {
+      const newArr = [newTaskItem, ...todoData];
+      return {
+        todoData: newArr
+      };
+    });
+  };
+
   render() {
     return (
       <div className="todo-app">
@@ -31,6 +49,9 @@ class App extends Component {
         <div className="top-panel d-flex">
           <SearchPanel />
           <ItemStatusFilter />
+        </div>
+        <div>
+          <AddTaskForm newTask={this.newTask} />
         </div>
         <TodoList todos={this.state.todoData} onDeleted={this.deleteItem} />
       </div>
