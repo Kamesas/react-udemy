@@ -15,8 +15,23 @@ class App extends Component {
       { id: 1, label: "Drink Coffee", important: false, done: true },
       { id: 2, label: "Learn React", important: true, done: false },
       { id: 3, label: "Make Awesome App", important: false, done: false }
-    ]
+    ],
+    finded: ""
   };
+
+  onSearchChange = e => {
+    this.setState({ finded: e });
+  };
+
+  search(items, finded) {
+    if (finded.length === 0) {
+      return items;
+    }
+
+    return items.filter(el => {
+      return el.label.toLowerCase().indexOf(finded.toLowerCase()) > -1;
+    });
+  }
 
   deleteItem = id => {
     this.setState(({ todoData }) => {
@@ -82,18 +97,21 @@ class App extends Component {
     const countDone = this.state.todoData.filter(el => el.done).length;
     const countTask = this.state.todoData.filter(el => !el.done).length;
 
+    const { todoData, finded } = this.state;
+    const visibleTasks = this.search(todoData, finded);
+
     return (
       <div className="todo-app">
         <AppHeader toDo={countTask} done={countDone} />
         <div className="top-panel d-flex">
-          <SearchPanel />
+          <SearchPanel onSearchChange={this.onSearchChange} />
           <ItemStatusFilter />
         </div>
         <div>
           <AddTaskForm newTask={this.newTask} />
         </div>
         <TodoList
-          todos={this.state.todoData}
+          todos={visibleTasks}
           onDeleted={this.deleteItem}
           onToggleImportant={this.onToggleImportant}
           onToggleDone={this.onToggleDone}
