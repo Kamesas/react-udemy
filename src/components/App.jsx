@@ -16,8 +16,27 @@ class App extends Component {
       { id: 2, label: "Learn React", important: true, done: false },
       { id: 3, label: "Make Awesome App", important: false, done: false }
     ],
-    finded: ""
+    finded: "",
+    filter: "all"
   };
+
+  onFilterChange = filter => {
+    this.setState({ filter: filter });
+  };
+
+  filter(items, filter) {
+    switch (filter) {
+      case "all":
+        return items;
+      case "active":
+        return items.filter(el => !el.done);
+      case "done":
+        return items.filter(el => el.done);
+
+      default:
+        return items;
+    }
+  }
 
   onSearchChange = e => {
     this.setState({ finded: e });
@@ -97,15 +116,18 @@ class App extends Component {
     const countDone = this.state.todoData.filter(el => el.done).length;
     const countTask = this.state.todoData.filter(el => !el.done).length;
 
-    const { todoData, finded } = this.state;
-    const visibleTasks = this.search(todoData, finded);
+    const { todoData, finded, filter } = this.state;
+    const visibleTasks = this.filter(this.search(todoData, finded), filter);
 
     return (
       <div className="todo-app">
         <AppHeader toDo={countTask} done={countDone} />
         <div className="top-panel d-flex">
           <SearchPanel onSearchChange={this.onSearchChange} />
-          <ItemStatusFilter />
+          <ItemStatusFilter
+            filter={filter}
+            onFilterChange={this.onFilterChange}
+          />
         </div>
         <div>
           <AddTaskForm newTask={this.newTask} />
