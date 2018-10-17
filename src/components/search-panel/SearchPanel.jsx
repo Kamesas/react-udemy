@@ -11,6 +11,13 @@ class SearchPanel extends Component {
     this.setState({ inpSearch: e.target.value });
     onSearchChange(e.target.value);
   };
+  // onSearch = e => {
+  //   this.setState({ inpSearch: e.target.value });
+  //   this.onSearchChange(e.target.value);
+  // };
+  // onSearchChange = s => {
+  //   this.props.onSearchChange(s);
+  // };
 
   render() {
     return (
